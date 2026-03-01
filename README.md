@@ -1,218 +1,81 @@
-<<<<<<< HEAD
-# Chrome Profile Locker 🔒
+🔐 LockMyChrome
+LockMyChrome is a production-ready browser extension designed to secure your digital footprint. It acts as a gatekeeper, locking your entire browsing session behind a secure PIN or password. Perfect for shared environments where privacy is a priority but OS-level user switching is inconvenient.
 
-A Chrome/Edge extension that locks your browser with a PIN or password. Protect your browsing session from prying eyes.
+🚨 The Problem
+Google Chrome allows anyone with physical access to a computer to open any profile and view history, saved passwords, and active sessions. This poses a significant risk on:
 
-## Features
+Shared Laptops: Roommates or family members snooping.
 
-- **One-time unlock per browser session** - Enter your PIN once to unlock all websites
-- **PIN or password support** - Use a 4-6 digit PIN or a full password
-- **Auto-lock timeout** - Lock after configurable inactivity period (5 min to 2 hours)
-- **Lock on restart** - Browser locks automatically when Chrome is reopened
-- **Secure storage** - SHA-256 hashing with random salt
-- **Local-only** - No server, no database, complete privacy
+Public Systems: College libraries or internet cafes.
 
-## Quick Start
+Office Workstations: Coworkers accessing your data during breaks.
 
-### Step 1: Convert Icons (Required)
+LockMyChrome solves this by intercepting website access until you authenticate, providing a much-needed layer of "soft" security.
 
-Chrome requires PNG icons, but this project uses SVG for quality. Convert them:
+✅ Key Features
+🔐 Session-Based Unlock: Authenticate once per session for an uninterrupted experience.
 
-```bash
-# Option A: Using Python (included)
-python convert-icons.py
+🔢 Flexible Auth: Supports 4–6 digit PINs or complex alphanumeric passwords.
 
-# Option B: Using ImageMagick
-cd icons
-magick convert icon16.svg icon16.png
-magick convert icon48.svg icon48.png
-magick convert icon128.svg icon128.png
-magick convert icon16-locked.svg icon16-locked.png
-magick convert icon48-locked.svg icon48-locked.png
-```
+⏳ Smart Auto-Lock: Automatically locks after a custom period of inactivity.
 
-### Step 2: Load Extension in Chrome
+🔁 Persistence: Re-locks instantly upon browser restart.
 
-1. Open Chrome and navigate to `chrome://extensions/`
-2. Enable **Developer mode** (top right toggle)
-3. Click **Load unpacked**
-4. Select the `Password Manager` folder
+🔒 Privacy First: Uses Salted SHA-256 hashing via the Web Crypto API. No plaintext storage, no servers, and zero tracking.
 
-### Step 3: Set Up Your PIN
+⚡ Lightweight: Built with Manifest V3 for optimal performance and battery life.
 
-1. Click the extension icon in Chrome toolbar
-2. Click **Settings**
-3. Go to the **Security** tab
-4. Click **Set PIN** and enter your desired PIN or password
-5. Click **Save**
+🏗️ Architecture & Logic
+The extension uses a multi-layered approach to ensure you aren't bypassed by simple tab switching:
 
-## How It Works
+Content Script: Injects a blocking layer on every URL.
 
-### Architecture
+Background Service Worker: Tracks the "locked/unlocked" state and manages the inactivity timer.
 
-This extension uses Chrome's Manifest V3 architecture with three main components:
+Secure UI: A dedicated, clean authentication page for PIN/Password entry.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  background.js (Service Worker)                            │
-│  - Manages lock state globally                             │
-│  - Handles idle detection (auto-lock)                      │
-│  - Stores encrypted PIN/password                           │
-│  - Communicates with all tabs                               │
-└─────────────────────────────────────────────────────────────┘
-           │                              │
-           ▼                              ▼
-┌─────────────────────┐      ┌─────────────────────────────────┐
-│  popup.html/js      │      │  content.js                    │
-│  - Quick actions    │      │  - Injected in every webpage   │
-│  - Lock/Unlock btn  │      │  - Shows/hides lock overlay     │
-│  - Settings access  │      │  - Prevents keyboard shortcuts │
-└─────────────────────┘      └─────────────────────────────────┘
-           │
-           ▼
-┌─────────────────────────────────────────────────────────────┐
-│  options.html/js                                            │
-│  - Configure PIN/password                                   │
-│  - Set auto-lock timeout                                     │
-│  - Toggle lock on restart                                    │
-└─────────────────────────────────────────────────────────────┘
-```
+🚀 Installation (Developer Mode)
+Until this is live on the Chrome Web Store, you can install it manually:
 
-### The Locking Mechanism
+Download or clone this repository to your local machine.
 
-1. **Content Script Injection**: `content.js` runs on every page (except chrome://, file://, etc.)
-2. **Lock Overlay**: When locked, a full-screen overlay blocks the page
-3. **Credential Verification**: PIN is hashed with SHA-256 + random salt before comparison
-4. **Cross-Tab Sync**: When unlocked, all tabs receive the unlock signal instantly
+Open Chrome and navigate to chrome://extensions/.
 
-### Security
+Toggle Developer Mode (top right corner) to ON.
 
-- **Hashing**: Uses Web Crypto API with SHA-256
-- **Salt**: 32-byte random salt generated for each PIN
-- **No Network**: All data stays local in `chrome.storage.local`
-- **Keyboard Blocking**: Prevents Ctrl+W, Ctrl+T, Ctrl+L and other shortcuts while locked
+Click Load unpacked.
 
-## Usage Guide
+Select the chrome-profile-locker folder.
 
-### Locking the Browser
+Pin the extension to your toolbar for easy access to settings.
 
-| Method | How |
-|--------|-----|
-| Manual | Click extension icon → "Lock Now" |
-| Auto-lock | After configured inactivity timeout |
-| On restart | Browser locks when Chrome is reopened |
+⚙️ Configuration
+Access the Options page to customize your security:
 
-### Unlocking the Browser
+Change Auth Type: Switch between PIN and Password.
 
-1. Visit any website (lock screen appears)
-2. Enter your PIN or password
-3. Click "Unlock" or press Enter
-4. Browse freely until browser locks again
+Idle Timeout: Set the minutes of inactivity required before auto-locking.
 
-### Settings
+Immediate Lock: A manual "Panic Button" to lock your session instantly.
 
-Access settings via: Extension icon → **Settings** (or right-click → Options)
+🔐 Security Design & Limitations
+How we protect you:
+Zero-Knowledge: We never see your password. All hashing happens locally.
 
-**General Settings:**
-- Auto-lock timeout: 5 min, 15 min, 30 min, 1 hour, 2 hours, or Never
-- Lock on browser restart: ON/OFF
+Isolation: Your credentials are stored in chrome.storage.local, isolated from website scripts and other extensions.
 
-**Security Settings:**
-- Set up/change/remove PIN or password
-- Password strength indicator
+⚠️ Important Disclaimer:
+This extension is designed for casual privacy and shared-device protection.
 
-## Project Structure
+It cannot prevent a tech-savvy user from uninstalling the extension or using "Incognito" mode (unless specifically allowed in settings).
 
-```
-Password Manager/
-├── manifest.json           # Extension manifest (MV3)
-├── background.js           # Service worker - core logic
-├── content.js              # Lock screen injection
-├── lock.css                # Lock overlay styles
-├── popup.html              # Extension popup UI
-├── popup.js                # Popup logic
-├── popup.css               # Popup styles
-├── options.html            # Settings page
-├── options.js              # Settings logic
-├── options.css             # Settings styles
-├── convert-icons.py        # SVG to PNG converter
-├── icons/                  # Extension icons
-│   ├── icon16.svg          # Unlocked 16px
-│   ├── icon48.svg          # Unlocked 48px
-│   ├── icon128.svg         # Unlocked 128px
-│   ├── icon16-locked.svg   # Locked 16px
-│   └── icon48-locked.svg   # Locked 48px
-└── README.md
-```
+It is not a replacement for Operating System passwords or Disk Encryption (FileVault/BitLocker).
 
-## Development
+🛠️ Tech Stack
+Logic: JavaScript (ES6+)
 
-### File Responsibilities
+API: Chrome Extensions API (Manifest V3)
 
-| File | Purpose |
-|------|---------|
-| `manifest.json` | Extension metadata, permissions, entry points |
-| `background.js` | State management, idle detection, message hub |
-| `content.js` | DOM manipulation, lock overlay, event handling |
-| `popup.js` | Quick actions UI controller |
-| `options.js` | Settings page controller |
-| `lock.css` | Full-screen overlay styles |
+Security: Web Crypto API (SubtleCrypto)
 
-### Key Permissions
-
-- `storage` - Save PIN hash and settings locally
-- `tabs` - Communicate with all open tabs
-- `idle` - Detect inactivity for auto-lock
-- `<all_urls>` - Inject content script everywhere
-
-### Excluded URLs
-
-The lock screen does NOT appear on:
-- `chrome://*`
-- `chrome-extension://*`
-- `edge://*`
-- `about:*`
-- `data:*`
-- `file://*`
-
-## Troubleshooting
-
-**Extension doesn't load:**
-- Ensure PNG icons exist in `icons/` folder (run `python convert-icons.py`)
-
-**Can't unlock:**
-- Go to Settings → Security → Remove PIN
-- Set up a new PIN
-
-**Lock screen not appearing:**
-- Check if the website is in excluded URLs (chrome://, file://, etc.)
-
-**Auto-lock not working:**
-- Ensure "Idle detection" permission is granted
-- Check timeout setting in General tab
-
-## Security Notes
-
-- If you forget your PIN, there is NO recovery - you must remove it from Settings
-- PIN is NEVER stored in plain text - only SHA-256 hash with salt
-- No data leaves your computer
-- The lock overlay blocks most keyboard shortcuts, but sophisticated users can still bypass it
-
-## Compatibility
-
-- Chrome 88+
-- Edge 88+
-- Any Chromium-based browser
-- Manifest V3
-
-## License
-
-MIT License - Feel free to use and modify for your needs.
-
-## Credits
-
-Built with vanilla JavaScript and CSS for maximum compatibility and performance.
-=======
-# LockMyChrome
-LockMyChrome is a Chrome extension that locks all websites behind a PIN or password. Unlock once per session, browse freely, and auto-lock after inactivity. Secure, local-only, and built for shared Chrome profiles.
->>>>>>> f49352cb376315b9114ee58201a6b59c594f7b9a
+Styling: HTML5 / CSS3
