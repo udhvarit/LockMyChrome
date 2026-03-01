@@ -57,8 +57,10 @@ async function loadSettings() {
     if (currentSettings.timeoutMinutes !== undefined) {
       timeoutSelect.value = currentSettings.timeoutMinutes;
     }
-    if (currentSettings.isLocked !== undefined) {
-      lockOnRestart.checked = currentSettings.isLocked;
+    if (currentSettings.lockOnRestart !== undefined) {
+      lockOnRestart.checked = currentSettings.lockOnRestart;
+    } else {
+      lockOnRestart.checked = true; // Default to enabled
     }
   } catch (e) {
     console.error('Error loading settings:', e);
@@ -70,7 +72,7 @@ async function saveSettings() {
   try {
     const settings = {
       timeoutMinutes: parseInt(timeoutSelect.value),
-      isLocked: lockOnRestart.checked
+      lockOnRestart: lockOnRestart.checked
     };
 
     await chrome.runtime.sendMessage({

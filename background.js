@@ -6,8 +6,9 @@ const DEFAULT_SETTINGS = {
   pin: null,                    // Will be set by user (null = not configured)
   passwordHash: null,           // SHA-256 hash of password
   salt: null,                   // Random salt for hashing
-  timeoutMinutes: 30,           // Default 30 minutes
-  isLocked: true,               // Start locked
+  timeoutMinutes: 30,          // Default 30 minutes
+  isLocked: true,               // Current lock state
+  lockOnRestart: true,          // Whether to lock on browser restart
   lastActivity: null            // Timestamp of last activity
 };
 
@@ -25,6 +26,12 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   if (!data.settings) {
     await chrome.storage.local.set({ settings: DEFAULT_SETTINGS });
     console.log('Default settings initialized');
+  } else {
+    // Migrate existing settings to include lockOnRestart if not present
+    if (data.settings.lockOnRestart === undefined) {
+      data.settings.lockOnRestart = true;
+      await chrome.storage.local.set({ settings: data.settings });
+    }
   }
 
   // Set initial lock state
@@ -184,17 +191,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         break;
 
       case 'updateSettings':
-        await saveSettings(message.settings);
-        // Update in-memory settings
-        if (message.settings.timeoutMinutes !== undefined) {
-          idleThresholdMinutes = message.settings.timeoutMinutes;
-          setupIdleDetection();
+        {
+          const currentSettings = await getSettings();
+          const newSettings = { ...currentSettings, ...message.settings };
+          await saveSettings(newSettings);
+          // Update in-memory settings
+          if (message.settings.timeoutMinutes !== undefined) {
+            idleThresholdMinutes = message.settings.timeoutMinutes;
+            setupIdleDetection();
+          }
+          if (message.settings.isLocked !== undefined) {
+            isLocked = message.settings.isLocked;
+            updateBadge(isLocked);
+          }
+          if (message.settings.lockOnRestart !== undefined) {
+            // If lockOnRestart is being disabled, also update isLocked
+            if (!message.settings.lockOnRestart) {
+              isLocked = false;
+              newSettings.isLocked = false;
+              await saveSettings(newSettings);
+              updateBadge(false);
+            }
+          }
+          sendResponse({ success: true });
         }
-        if (message.settings.isLocked !== undefined) {
-          isLocked = message.settings.isLocked;
-          updateBadge(isLocked);
-        }
-        sendResponse({ success: true });
         break;
 
       case 'setPin':
@@ -299,7 +319,16 @@ function generateSalt() {
 chrome.runtime.onStartup.addListener(async () => {
   console.log('Chrome Profile Locker starting up');
   const settings = await getSettings();
-  isLocked = settings.isLocked !== false;
+  
+  // Check if we should lock on restart
+  if (settings.lockOnRestart) {
+    isLocked = true;
+    settings.isLocked = true;
+    await saveSettings(settings);
+  } else {
+    isLocked = settings.isLocked !== false;
+  }
+  
   idleThresholdMinutes = settings.timeoutMinutes || 30;
   setupIdleDetection();
   updateBadge(isLocked);
@@ -308,7 +337,16 @@ chrome.runtime.onStartup.addListener(async () => {
 // Initialize on load
 (async () => {
   const settings = await getSettings();
-  isLocked = settings.isLocked !== false;
+  
+  // Check if we should lock on startup (first install or lockOnRestart enabled)
+  if (settings.lockOnRestart) {
+    isLocked = true;
+    settings.isLocked = true;
+    await saveSettings(settings);
+  } else {
+    isLocked = settings.isLocked !== false;
+  }
+  
   idleThresholdMinutes = settings.timeoutMinutes || 30;
   setupIdleDetection();
   updateBadge(isLocked);

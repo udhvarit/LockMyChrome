@@ -7,11 +7,13 @@ const lockBtn = document.getElementById('lock-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const setupWarning = document.getElementById('setup-warning');
 const setupPinBtn = document.getElementById('setup-pin-btn');
+const lockOnRestartToggle = document.getElementById('lock-on-restart-toggle');
 
 // Initialize popup
 async function init() {
   await updateLockStatus();
   await checkPinSetup();
+  await loadLockOnRestart();
 }
 
 // Update lock status display
@@ -92,10 +94,38 @@ function openSettings() {
   chrome.runtime.openOptionsPage();
 }
 
+// Load lock on restart setting
+async function loadLockOnRestart() {
+  try {
+    const response = await chrome.runtime.sendMessage({ action: 'getSettings' });
+    const settings = response?.settings || {};
+    lockOnRestartToggle.checked = settings.isLocked !== false;
+  } catch (e) {
+    console.error('Error loading lock on restart setting:', e);
+  }
+}
+
+// Handle lock on restart toggle
+async function handleLockOnRestartToggle() {
+  const shouldLock = lockOnRestartToggle.checked;
+  
+  try {
+    if (shouldLock) {
+      await chrome.runtime.sendMessage({ action: 'lock' });
+    } else {
+      await chrome.runtime.sendMessage({ action: 'unlock' });
+    }
+    await updateLockStatus();
+  } catch (e) {
+    console.error('Error toggling lock on restart:', e);
+  }
+}
+
 // Event Listeners
 lockBtn.addEventListener('click', handleLockClick);
 settingsBtn.addEventListener('click', openSettings);
 setupPinBtn.addEventListener('click', openSettings);
+lockOnRestartToggle.addEventListener('change', handleLockOnRestartToggle);
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', init);
