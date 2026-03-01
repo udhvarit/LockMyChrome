@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Profile Locker - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="page-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h1>Profile Locker</h1>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-section="general">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span>General</span>
+        </button>
+
+        <button class="nav-item" data-section="security">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Security</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- General Section -->
+      <section id="general" class="section active">
+        <div class="section-header">
+          <h2>General Settings</h2>
+          <p>Configure how the locker behaves</p>
+        </div>
+
+        <!-- Auto-lock Timeout -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="setting-details">
+              <h3>Auto-lock Timeout</h3>
+              <p>Browser will lock after this period of inactivity</p>
+            </div>
+          </div>
+          <div class="setting-control">
+            <div class="timeout-selector">
+              <select id="timeout-select">
+                <option value="5">5 minutes</option>
+                <option value="15">15 minutes</option>
+                <option value="30" selected>30 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="120">2 hours</option>
+                <option value="0">Never</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lock on Restart -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 12h20M2 12l6-6M2 12l6 6M22 12l-6-6M22 12l-6 6"></path>
+              </svg>
+            </div>
+            <div class="setting-details">
+              <h3>Lock on Browser Restart</h3>
+              <p>Always lock when Chrome is reopened</p>
+            </div>
+          </div>
+          <div class="setting-control">
+            <label class="toggle">
+              <input type="checkbox" id="lock-on-restart" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="setting-card">
+          <div class="setting-info">
+            <div class="setting-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <div class="setting-details">
+              <h3>Quick Actions</h3>
+              <p>Manually control the lock state</p>
+            </div>
+          </div>
+          <div class="setting-control">
+            <div class="action-buttons">
+              <button id="lock-now-btn" class="btn btn-danger">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Lock Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security Section -->
+      <section id="security" class="section">
+        <div class="section-header">
+          <h2>Security Settings</h2>
+          <p>Manage your PIN or password</p>
+        </div>
+
+        <!-- PIN Status -->
+        <div class="status-card" id="pin-status-card">
+          <div class="status-content">
+            <div class="status-icon" id="pin-status-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="status-details">
+              <h3 id="pin-status-title">No PIN Set</h3>
+              <p id="pin-status-desc">Set a PIN or password to enable browser locking</p>
+            </div>
+          </div>
+          <button id="set-pin-btn" class="btn btn-primary">Set PIN</button>
+        </div>
+
+        <!-- Set PIN Form -->
+        <div class="setting-card pin-form" id="pin-form-card" style="display: none;">
+          <div class="form-header">
+            <h3>Set New PIN or Password</h3>
+            <p>Choose a secure PIN (4-6 digits) or a longer password</p>
+          </div>
+
+          <div class="form-group">
+            <label for="new-pin">New PIN / Password</label>
+            <div class="input-with-toggle">
+              <input type="password" id="new-pin" placeholder="Enter PIN or password" maxlength="50">
+              <button type="button" class="toggle-visibility" data-target="new-pin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div class="pin-strength">
+              <div class="strength-bar">
+                <div class="strength-fill" id="strength-fill"></div>
+              </div>
+              <span class="strength-text" id="strength-text">Enter a PIN or password</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-pin">Confirm PIN / Password</label>
+            <div class="input-with-toggle">
+              <input type="password" id="confirm-pin" placeholder="Confirm PIN or password" maxlength="50">
+              <button type="button" class="toggle-visibility" data-target="confirm-pin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button id="save-pin-btn" class="btn btn-primary">Save PIN</button>
+            <button id="cancel-pin-btn" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Change PIN Card -->
+        <div class="setting-card" id="change-pin-card" style="display: none;">
+          <div class="setting-info">
+            <div class="setting-icon success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="setting-details">
+              <h3>PIN is Set</h3>
+              <p>Your browser is protected</p>
+            </div>
+          </div>
+          <div class="setting-control">
+            <div class="action-buttons">
+              <button id="change-pin-btn" class="btn btn-secondary">Change PIN</button>
+              <button id="remove-pin-btn" class="btn btn-danger">Remove PIN</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="notice-card warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <div>
+            <h4>Important Security Note</h4>
+            <p>Your PIN/password is stored locally using SHA-256 hashing with a random salt. If you forget your PIN, you will need to remove and reset it. There is no recovery option.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <span id="toast-message"></span>
+  </div>
+
+  <!-- Remove PIN Confirmation Modal -->
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Remove PIN?</h3>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to remove your PIN? Your browser will no longer be protected.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="cancel-remove-btn" class="btn btn-secondary">Cancel</button>
+        <button id="confirm-remove-btn" class="btn btn-danger">Remove PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
