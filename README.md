@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Chrome Profile Locker 🔒
 
 A Chrome/Edge extension that locks your browser with a PIN or password. Protect your browsing session from prying eyes.
@@ -211,3 +212,7 @@ MIT License - Feel free to use and modify for your needs.
 ## Credits
 
 Built with vanilla JavaScript and CSS for maximum compatibility and performance.
+=======
+# LockMyChrome
+LockMyChrome is a Chrome extension that locks all websites behind a PIN or password. Unlock once per session, browse freely, and auto-lock after inactivity. Secure, local-only, and built for shared Chrome profiles.
+>>>>>>> f49352cb376315b9114ee58201a6b59c594f7b9a
