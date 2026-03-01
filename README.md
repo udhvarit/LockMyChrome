@@ -67,17 +67,25 @@ While LockMyChrome provides robust privacy, please note the following inherent l
 
 ---
 
-## 🏗️ Project Structure
+#### 📁 Project Structure
+
 ```text
-chrome-profile-locker/
-├── manifest.json      # Extension configuration
-├── background.js     # Manages lock state & inactivity timers
-├── content.js        # Injects the lock overlay on websites
-├── ui/               # Authentication interface
-│   ├── lock.html
-│   ├── lock.css
-│   └── lock.js
-└── options/          # Settings and configuration page
-    ├── options.html
-    ├── options.css
-    └── options.js
+LockMyChrome/
+├── icons/                 # Extension icons in various sizes
+│   ├── icon16-locked.svg
+│   ├── icon16.svg
+│   ├── icon48-locked.svg
+│   ├── icon48.svg
+│   └── icon128.svg
+├── background.js          # Service worker managing state and timers
+├── content.js             # Script injected to block website access
+├── convert-icons.py       # Helper script for icon processing
+├── lock.css               # Styling for the authentication screen
+├── manifest.json          # Extension configuration (Manifest V3)
+├── options.css            # Styling for the settings page
+├── options.html           # Settings page HTML
+├── options.js             # Logic for saving/updating settings
+├── popup.css              # Styling for the extension popup
+├── popup.html             # Extension popup UI
+├── popup.js               # Logic for the extension popup
+└── README.md              # Project documentation
