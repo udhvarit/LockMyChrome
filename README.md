@@ -1,81 +1,83 @@
-🔐 LockMyChrome
-LockMyChrome is a production-ready browser extension designed to secure your digital footprint. It acts as a gatekeeper, locking your entire browsing session behind a secure PIN or password. Perfect for shared environments where privacy is a priority but OS-level user switching is inconvenient.
+# 🔐 LockMyChrome
 
-🚨 The Problem
-Google Chrome allows anyone with physical access to a computer to open any profile and view history, saved passwords, and active sessions. This poses a significant risk on:
+**LockMyChrome** is a production-ready Chrome extension that protects your browsing session by locking access to all websites behind a secure **PIN or Password**.
 
-Shared Laptops: Roommates or family members snooping.
+It provides a vital layer of "soft" security for users in shared environments, ensuring your open tabs, history, and active sessions remain private.
 
-Public Systems: College libraries or internet cafes.
+---
 
-Office Workstations: Coworkers accessing your data during breaks.
+## 🚨 The Problem
+Google Chrome allows anyone with physical access to a computer to open any profile and view sensitive data. This is a major privacy risk in:
+* **Shared Laptops:** Roommates or family members snooping.
+* **Public Systems:** Library computers or internet cafes.
+* **Office Workstations:** Coworkers accessing your data while you step away.
 
-LockMyChrome solves this by intercepting website access until you authenticate, providing a much-needed layer of "soft" security.
+**LockMyChrome** solves this by intercepting website access until you authenticate.
 
-✅ Key Features
-🔐 Session-Based Unlock: Authenticate once per session for an uninterrupted experience.
+---
 
-🔢 Flexible Auth: Supports 4–6 digit PINs or complex alphanumeric passwords.
+## ✅ Key Features
+* 🔐 **Session-Based Unlock:** Authenticate once per session for seamless browsing.
+* 🔢 **Flexible Auth:** Supports 4–6 digit PINs or full alphanumeric passwords.
+* ⏳ **Smart Auto-Lock:** Automatically locks after a custom period of inactivity.
+* 🔁 **Persistence:** Automatically re-locks upon browser restart.
+* 🔒 **Privacy First:** Uses **Salted SHA-256 hashing** via the Web Crypto API.
+* 💾 **Local-Only Storage:** No servers, no tracking, and zero data leaves your device.
+* ⚡ **Manifest V3 Compliant:** Built using the latest, high-performance extension standards.
 
-⏳ Smart Auto-Lock: Automatically locks after a custom period of inactivity.
+---
 
-🔁 Persistence: Re-locks instantly upon browser restart.
+## 🚀 Installation (Developer Mode)
 
-🔒 Privacy First: Uses Salted SHA-256 hashing via the Web Crypto API. No plaintext storage, no servers, and zero tracking.
+Until the extension is available on the Chrome Web Store, you can install it manually:
 
-⚡ Lightweight: Built with Manifest V3 for optimal performance and battery life.
+1.  **Clone or Download** this repository to your local machine.
+2.  Open Google Chrome and navigate to `chrome://extensions/`.
+3.  In the top-right corner, toggle **Developer Mode** to **ON**.
+4.  Click the **Load unpacked** button.
+5.  Select the `chrome-profile-locker` folder from your files.
+6.  (Optional) **Pin the extension** to your toolbar for quick access to the lock settings.
 
-🏗️ Architecture & Logic
-The extension uses a multi-layered approach to ensure you aren't bypassed by simple tab switching:
+---
 
-Content Script: Injects a blocking layer on every URL.
+## 🔐 Security Design
 
-Background Service Worker: Tracks the "locked/unlocked" state and manages the inactivity timer.
+LockMyChrome is built with a "Security-First" mindset, ensuring that even if someone accesses your local files, your credentials remain safe.
 
-Secure UI: A dedicated, clean authentication page for PIN/Password entry.
+* **Hashing & Salting:** Passwords are never stored in plaintext. We generate a unique **random salt** and use **SHA-256 hashing** via the Web Crypto API (`SubtleCrypto`).
+* **Storage Isolation:** Credentials and state are stored using `chrome.storage.local`. This data is profile-scoped and isolated from websites and other extensions.
+* **State Management:** The "unlocked" state lives in the background service worker’s memory, ensuring it resets if the browser process is killed.
 
-🚀 Installation (Developer Mode)
-Until this is live on the Chrome Web Store, you can install it manually:
+---
 
-Download or clone this repository to your local machine.
+## ⚠️ Limitations
+While LockMyChrome provides robust privacy, please note the following inherent limitations of Chrome extensions:
 
-Open Chrome and navigate to chrome://extensions/.
+1.  **Intentional Removal:** An extension cannot prevent a user from right-clicking the icon and selecting "Remove from Chrome."
+2.  **Incognito Mode:** Extensions are disabled in Incognito by default unless you manually toggle "Allow in Incognito" in the extension settings.
+3.  **OS-Level Access:** This tool does not replace Operating System passwords or Disk Encryption (like BitLocker or FileVault). It is a browser-level gatekeeper.
 
-Toggle Developer Mode (top right corner) to ON.
+---
 
-Click Load unpacked.
+## 🛠️ Tech Stack
+* **Language:** JavaScript (ES6+)
+* **Framework:** Chrome Extensions API (Manifest V3)
+* **Security:** Web Crypto API (for local cryptographic operations)
+* **Frontend:** HTML5 & CSS3 (Native, no heavy frameworks for maximum speed)
 
-Select the chrome-profile-locker folder.
+---
 
-Pin the extension to your toolbar for easy access to settings.
-
-⚙️ Configuration
-Access the Options page to customize your security:
-
-Change Auth Type: Switch between PIN and Password.
-
-Idle Timeout: Set the minutes of inactivity required before auto-locking.
-
-Immediate Lock: A manual "Panic Button" to lock your session instantly.
-
-🔐 Security Design & Limitations
-How we protect you:
-Zero-Knowledge: We never see your password. All hashing happens locally.
-
-Isolation: Your credentials are stored in chrome.storage.local, isolated from website scripts and other extensions.
-
-⚠️ Important Disclaimer:
-This extension is designed for casual privacy and shared-device protection.
-
-It cannot prevent a tech-savvy user from uninstalling the extension or using "Incognito" mode (unless specifically allowed in settings).
-
-It is not a replacement for Operating System passwords or Disk Encryption (FileVault/BitLocker).
-
-🛠️ Tech Stack
-Logic: JavaScript (ES6+)
-
-API: Chrome Extensions API (Manifest V3)
-
-Security: Web Crypto API (SubtleCrypto)
-
-Styling: HTML5 / CSS3
+## 🏗️ Project Structure
+```text
+chrome-profile-locker/
+├── manifest.json      # Extension configuration
+├── background.js     # Manages lock state & inactivity timers
+├── content.js        # Injects the lock overlay on websites
+├── ui/               # Authentication interface
+│   ├── lock.html
+│   ├── lock.css
+│   └── lock.js
+└── options/          # Settings and configuration page
+    ├── options.html
+    ├── options.css
+    └── options.js
